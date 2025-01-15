@@ -25,12 +25,6 @@ class EnvironmentVariablesValidator {
   @Min(0)
   @Max(65535)
   @IsOptional()
-  APP_PORT: number;
-
-  @IsInt()
-  @Min(0)
-  @Max(65535)
-  @IsOptional()
   PORT: number;
   @IsString()
   @IsOptional()
