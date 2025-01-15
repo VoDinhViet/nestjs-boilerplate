@@ -15,7 +15,6 @@ import { Environment } from 'src/constants/app.constant';
 
 class EnvironmentVariablesValidator {
   @IsEnum(Environment)
-  @IsOptional()
   NODE_ENV: Environment;
 
   @IsString()
