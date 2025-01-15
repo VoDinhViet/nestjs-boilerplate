@@ -26,10 +26,11 @@ async function bootstrap() {
 
   await app.listen(
     configService.getOrThrow('app.port', { infer: true }),
-    () => {
+    async () => {
       console.info(`
     ======================================================================================================
         Name: [${configService.getOrThrow('app.name', { infer: true })}] - Port: [${configService.getOrThrow('app.port', { infer: true })}] - Environment: [${configService.getOrThrow('app.nodeEnv', { infer: true })}]
+        Swagger UI: ${(await app.getUrl()).replace(`[::1]`, `localhost`).trim()}/api-docs
     ======================================================================================================
   `);
     },

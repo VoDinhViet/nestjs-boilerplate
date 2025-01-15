@@ -14,6 +14,7 @@ async function main() {
   await db
     .insert(users)
     .values({
+      full_name: 'Viet Vo Dinh',
       email: 'vietvodinh12547@gmail.com',
       password: '123456',
     })
