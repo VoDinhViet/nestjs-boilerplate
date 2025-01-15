@@ -7,11 +7,13 @@ import { HealthModule } from './api/health/health.module';
 import { CacheModule } from './cache/cache.module';
 import appConfig from './config/app.config';
 import 'dotenv/config';
+import redisConfig from './cache/config/redis.config';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: ['.env', `.env.${process.env.NODE_ENV}`],
-      load: [appConfig],
+      load: [appConfig, redisConfig],
       isGlobal: true,
     }),
     DatabaseModule,

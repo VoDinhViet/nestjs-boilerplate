@@ -44,7 +44,7 @@ class EnvironmentVariablesValidator {
 }
 
 export default registerAs<AppConfig>('app', () => {
-  console.log(`
+  console.info(`
     ======================================================================================================
         Register AppConfig from environment variables
     ======================================================================================================

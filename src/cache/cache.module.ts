@@ -2,6 +2,8 @@ import { Global, Module } from '@nestjs/common';
 import { Cacheable } from 'cacheable';
 import { CacheService } from './cache.service';
 import KeyvRedis from '@keyv/redis';
+import { ConfigService } from '@nestjs/config';
+import { AllConfigType } from '../config/config.type';
 
 export const CACHE_INSTANCE = 'CACHE_INSTANCE';
 
@@ -10,9 +12,10 @@ export const CACHE_INSTANCE = 'CACHE_INSTANCE';
   providers: [
     {
       provide: CACHE_INSTANCE,
-      useFactory: () => {
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService<AllConfigType>) => {
         const secondary = new KeyvRedis(
-          'redis://default:YRe1C4DEdABp3GrT53NIy8UJzHfTJTHe@redis-12079.c252.ap-southeast-1-1.ec2.redns.redis-cloud.com:12079',
+          configService.get('redis.url', { infer: true }),
         );
         return new Cacheable({ secondary, ttl: '4h' });
       },
