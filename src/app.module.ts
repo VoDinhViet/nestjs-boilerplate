@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { HealthModule } from './api/health/health.module';
+import { CacheModule } from './cache/cache.module';
 import appConfig from './config/app.config';
 import 'dotenv/config';
 @Module({
@@ -15,6 +16,7 @@ import 'dotenv/config';
     }),
     DatabaseModule,
     HealthModule,
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],

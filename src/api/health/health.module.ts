@@ -4,7 +4,12 @@ import { TerminusModule } from '@nestjs/terminus';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
-  imports: [TerminusModule, HttpModule],
+  imports: [
+    TerminusModule.forRoot({
+      errorLogStyle: 'pretty',
+    }),
+    HttpModule,
+  ],
   controllers: [HealthController],
 })
 export class HealthModule {}
