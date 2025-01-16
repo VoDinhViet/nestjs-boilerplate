@@ -1,18 +1,68 @@
-FROM node:20-alpine
+##################
+# BUILD BASE IMAGE
+##################
 
-# Create app directory
+FROM node:20-alpine AS base
+
+# Install and use pnpm
+RUN npm install -g pnpm
+
+#############################
+# BUILD FOR LOCAL DEVELOPMENT
+#############################
+
+FROM base As development
 WORKDIR /app
+RUN chown -R node:node /app
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
+COPY --chown=node:node package*.json pnpm-lock.yaml ./
 
-RUN npm install
+# Install all dependencies (including devDependencies)
+RUN pnpm install
 
 # Bundle app source
-COPY . .
+COPY --chown=node:node . .
 
-# Creates a "dist" folder with the production build
-RUN npm run build
+# Use the node user from the image (instead of the root user)
+USER node
+
+#####################
+# BUILD BUILDER IMAGE
+#####################
+
+FROM base AS builder
+WORKDIR /app
+
+COPY --chown=node:node package*.json pnpm-lock.yaml ./
+COPY --chown=node:node --from=development /app/node_modules ./node_modules
+COPY --chown=node:node --from=development /app/src ./src
+COPY --chown=node:node --from=development /app/tsconfig.json ./tsconfig.json
+COPY --chown=node:node --from=development /app/tsconfig.build.json ./tsconfig.build.json
+COPY --chown=node:node --from=development /app/nest-cli.json ./nest-cli.json
+
+RUN pnpm build
+
+# Removes unnecessary packages adn re-install only production dependencies
+ENV NODE_ENV production
+RUN pnpm prune --prod
+RUN pnpm install --prod
+
+USER node
+
+######################
+# BUILD FOR PRODUCTION
+######################
+
+FROM node:20-alpine AS production
+WORKDIR /app
+
+
+# Copy the bundled code from the build stage to the production image
+COPY --chown=node:node --from=builder /app/node_modules ./node_modules
+COPY --chown=node:node --from=builder /app/dist ./dist
+COPY --chown=node:node --from=builder /app/package.json ./
+
+USER node
 
 # Start the server using the production build
 CMD [ "node", "dist/main.js" ]
