@@ -1,13 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { AllConfigType } from '../../config/config.type';
 import {
   HealthCheck,
   HealthCheckResult,
   HealthCheckService,
   HttpHealthIndicator,
 } from '@nestjs/terminus';
+import { AllConfigType } from '../../config/config.type';
 
 @ApiTags('health')
 @Controller('health')

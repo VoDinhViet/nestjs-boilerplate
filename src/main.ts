@@ -1,12 +1,12 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
 import {
   HttpStatus,
   UnprocessableEntityException,
   ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 import { AllConfigType } from './config/config.type';
 import { Environment } from './constants/app.constant';
 import setupSwagger from './utils/setup-swagger';

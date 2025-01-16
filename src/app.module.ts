@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import 'dotenv/config';
+import { HealthModule } from './api/health/health.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DatabaseModule } from './database/database.module';
-import { ConfigModule } from '@nestjs/config';
-import { HealthModule } from './api/health/health.module';
 import { CacheModule } from './cache/cache.module';
-import appConfig from './config/app.config';
-import 'dotenv/config';
 import redisConfig from './cache/config/redis.config';
+import appConfig from './config/app.config';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [

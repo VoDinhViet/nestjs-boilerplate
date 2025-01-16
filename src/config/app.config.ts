@@ -9,9 +9,9 @@ import {
   Max,
   Min,
 } from 'class-validator';
+import { Environment } from 'src/constants/app.constant';
 import validateConfig from '../utils/validate-config';
 import { AppConfig } from './app-config.type';
-import { Environment } from 'src/constants/app.constant';
 
 class EnvironmentVariablesValidator {
   @IsEnum(Environment)
