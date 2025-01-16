@@ -1,17 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { eq } from 'drizzle-orm';
-import { CacheService } from '../../cache/cache.service';
 import { DRIZZLE } from '../../database/database.module';
 import { users } from '../../database/schemas';
 import { DrizzleDB } from '../../database/types/drizzle';
+import { hashPassword } from '../../utils/password.util';
 import { CreateUserReqDto } from './dto/create-user.req.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private readonly cacheService: CacheService,
-    @Inject(DRIZZLE) private readonly db: DrizzleDB,
-  ) {}
+  constructor(@Inject(DRIZZLE) private readonly db: DrizzleDB) {}
 
   async findOneByEmail(email: string) {
     return this.db.query.users.findFirst({
@@ -29,6 +26,7 @@ export class UsersService {
       .insert(users)
       .values({
         ...reqDto,
+        password: await hashPassword(reqDto.password),
       })
       .returning();
   }

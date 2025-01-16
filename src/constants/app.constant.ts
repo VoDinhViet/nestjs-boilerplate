@@ -5,3 +5,6 @@ export enum Environment {
   PRODUCTION = 'production',
   TEST = 'test',
 }
+
+export const IS_PUBLIC = 'isPublic';
+export const IS_AUTH_OPTIONAL = 'isAuthOptional';

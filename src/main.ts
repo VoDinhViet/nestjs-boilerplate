@@ -1,19 +1,23 @@
 import {
+  ClassSerializerInterceptor,
   HttpStatus,
   UnprocessableEntityException,
   ValidationError,
   ValidationPipe,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { AuthService } from './api/auth/auth.service';
 import { AppModule } from './app.module';
 import { AllConfigType } from './config/config.type';
 import { Environment } from './constants/app.constant';
+import { AuthGuard } from './guards/auth.guard';
 import setupSwagger from './utils/setup-swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService<AllConfigType>);
+  const reflector = app.get(Reflector);
   const isProduction =
     configService.get('app.nodeEnv', { infer: true }) ===
     Environment.PRODUCTION;
@@ -28,6 +32,14 @@ async function bootstrap() {
       },
     }),
   );
+
+  app.useGlobalGuards(new AuthGuard(reflector, app.get(AuthService)));
+
+  //************************************************************
+  // Transform response to class instance
+  //************************************************************
+
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
   //************************************************************
   // [Enable/Disable] Swagger UI

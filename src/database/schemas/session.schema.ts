@@ -4,7 +4,6 @@ import { users } from './user.schema';
 
 export const sessions = pgTable('sessions', {
   id: uuid().primaryKey().defaultRandom(),
-  email: varchar({ length: 255 }).notNull().unique(),
   hash: varchar({ length: 255 }).notNull(),
   created_at: timestamp().notNull().defaultNow(),
   author_id: uuid().notNull(),
