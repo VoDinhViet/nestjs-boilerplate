@@ -1,8 +1,8 @@
+import { AuthConfig } from '@/api/auth/config/auth-config.type';
+import { IsMs } from '@/decorators/validators/is-ms.decorator';
+import validateConfig from '@/utils/validate-config';
 import { registerAs } from '@nestjs/config';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { IsMs } from '../../../decorators/validators/is-ms.decorator';
-import validateConfig from '../../../utils/validate-config';
-import { AuthConfig } from './auth-config.type';
 
 class EnvironmentVariablesValidator {
   @IsString()

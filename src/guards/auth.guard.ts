@@ -1,3 +1,5 @@
+import { AuthService } from '@/api/auth/auth.service';
+import { IS_AUTH_OPTIONAL, IS_PUBLIC } from '@/constants/app.constant';
 import {
   CanActivate,
   ExecutionContext,
@@ -6,8 +8,6 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
-import { AuthService } from '../api/auth/auth.service';
-import { IS_AUTH_OPTIONAL, IS_PUBLIC } from '../constants/app.constant';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

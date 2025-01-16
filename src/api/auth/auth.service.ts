@@ -1,3 +1,16 @@
+import { LoginReqDto } from '@/api/auth/dto/login.req.dto';
+import { LoginResDto } from '@/api/auth/dto/login.res.dto';
+import { JwtPayloadType } from '@/api/auth/types/jwt-payload.type';
+import { CacheService } from '@/cache/cache.service';
+import { Branded } from '@/common/types/types';
+import { AllConfigType } from '@/config/config.type';
+import { CacheKey } from '@/constants/cache.constant';
+import { DRIZZLE } from '@/database/database.module';
+import { users } from '@/database/schemas';
+import { sessions } from '@/database/schemas/session.schema';
+import { DrizzleDB } from '@/database/types/drizzle';
+import { createCacheKey } from '@/utils/cache.util';
+import { verifyPassword } from '@/utils/password.util';
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 import { ConfigService } from '@nestjs/config';
@@ -6,19 +19,6 @@ import { plainToInstance } from 'class-transformer';
 import * as crypto from 'crypto';
 import { eq } from 'drizzle-orm';
 import ms from 'ms';
-import { CacheService } from '../../cache/cache.service';
-import { Branded } from '../../common/types/types';
-import { AllConfigType } from '../../config/config.type';
-import { CacheKey } from '../../constants/cache.constant';
-import { DRIZZLE } from '../../database/database.module';
-import { users } from '../../database/schemas';
-import { sessions } from '../../database/schemas/session.schema';
-import { DrizzleDB } from '../../database/types/drizzle';
-import { createCacheKey } from '../../utils/cache.util';
-import { verifyPassword } from '../../utils/password.util';
-import { LoginReqDto } from './dto/login.req.dto';
-import { LoginResDto } from './dto/login.res.dto';
-import { JwtPayloadType } from './types/jwt-payload.type';
 
 type Token = Branded<
   {
@@ -38,7 +38,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signIn(reqDto: LoginReqDto): Promise<any> {
+  async signIn(reqDto: LoginReqDto): Promise<LoginResDto> {
     const { email, password } = reqDto;
     const user = await this.db.query.users.findFirst({
       where: eq(users.email, email),

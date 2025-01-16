@@ -1,3 +1,8 @@
+import { AuthService } from '@/api/auth/auth.service';
+import { AllConfigType } from '@/config/config.type';
+import { Environment } from '@/constants/app.constant';
+import { AuthGuard } from '@/guards/auth.guard';
+import setupSwagger from '@/utils/setup-swagger';
 import {
   ClassSerializerInterceptor,
   HttpStatus,
@@ -7,12 +12,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
-import { AuthService } from './api/auth/auth.service';
 import { AppModule } from './app.module';
-import { AllConfigType } from './config/config.type';
-import { Environment } from './constants/app.constant';
-import { AuthGuard } from './guards/auth.guard';
-import setupSwagger from './utils/setup-swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

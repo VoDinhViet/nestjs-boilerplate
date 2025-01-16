@@ -1,3 +1,11 @@
+import { Constructor } from '@/common/types/types';
+import {
+  ToBoolean,
+  ToLowerCase,
+  ToUpperCase,
+} from '@/decorators/transform.decorators';
+import { IsNullable } from '@/decorators/validators/is-nullable.decorator';
+import { IsPassword } from '@/decorators/validators/is-password.decorator';
 import { applyDecorators } from '@nestjs/common';
 import { ApiProperty, type ApiPropertyOptions } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -22,10 +30,6 @@ import {
   NotEquals,
   ValidateNested,
 } from 'class-validator';
-import { Constructor } from '../common/types/types';
-import { ToBoolean, ToLowerCase, ToUpperCase } from './transform.decorators';
-import { IsNullable } from './validators/is-nullable.decorator';
-import { IsPassword } from './validators/is-password.decorator';
 
 interface IFieldOptions {
   each?: boolean;

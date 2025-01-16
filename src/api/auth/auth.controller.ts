@@ -1,7 +1,7 @@
+import { AuthService } from '@/api/auth/auth.service';
+import { LoginReqDto } from '@/api/auth/dto/login.req.dto';
+import { LoginResDto } from '@/api/auth/dto/login.res.dto';
 import { Body, Controller, Post } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginReqDto } from './dto/login.req.dto';
-import { LoginResDto } from './dto/login.res.dto';
 
 @Controller('auth')
 export class AuthController {

@@ -1,5 +1,7 @@
 import { registerAs } from '@nestjs/config';
 
+import { RedisConfig } from '@/cache/config/redis-config.type';
+import validateConfig from '@/utils/validate-config';
 import {
   IsBoolean,
   IsInt,
@@ -9,8 +11,6 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import validateConfig from '../../utils/validate-config';
-import { RedisConfig } from './redis-config.type';
 
 class EnvironmentVariablesValidator {
   @IsString()

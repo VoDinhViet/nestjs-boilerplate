@@ -2,7 +2,7 @@ import {
   EmailField,
   PasswordField,
   StringField,
-} from '../../../decorators/field.decorators';
+} from '@/decorators/field.decorators';
 
 export class CreateUserReqDto {
   @EmailField()

@@ -1,6 +1,6 @@
+import { CacheService } from '@/cache/cache.service';
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
-import { CacheService } from './cache/cache.service';
 
 @Controller()
 export class AppController {
