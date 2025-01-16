@@ -11,17 +11,17 @@ RUN npm install -g pnpm
 # BUILD FOR LOCAL DEVELOPMENT
 #############################
 
-FROM base as development
+FROM base As development
 WORKDIR /app
+RUN chown -R node:node /app
 
-# Copy only necessary files for dependency installation
-COPY package*.json pnpm-lock.yaml ./
+COPY --chown=node:node package*.json pnpm-lock.yaml ./
 
 # Install all dependencies (including devDependencies)
 RUN pnpm install
 
-# Copy the rest of the application source code
-COPY . .
+# Bundle app source
+COPY --chown=node:node . .
 
 # Use the node user from the image (instead of the root user)
 USER node
@@ -30,22 +30,22 @@ USER node
 # BUILD BUILDER IMAGE
 #####################
 
-FROM base as builder
+FROM base AS builder
 WORKDIR /app
 
-# Copy package files and install dependencies from development stage
-COPY --from=development /app/node_modules ./node_modules
-COPY package*.json pnpm-lock.yaml ./
+COPY --chown=node:node package*.json pnpm-lock.yaml ./
+COPY --chown=node:node --from=development /app/node_modules ./node_modules
+COPY --chown=node:node --from=development /app/src ./src
+COPY --chown=node:node --from=development /app/tsconfig.json ./tsconfig.json
+COPY --chown=node:node --from=development /app/tsconfig.build.json ./tsconfig.build.json
+COPY --chown=node:node --from=development /app/nest-cli.json ./nest-cli.json
 
-# Copy application source code
-COPY . .
-
-# Build the application
 RUN pnpm build
 
-# Remove unnecessary packages and install only production dependencies
+# Removes unnecessary packages adn re-install only production dependencies
 ENV NODE_ENV production
 RUN pnpm prune --prod
+RUN pnpm install --prod
 
 USER node
 
@@ -56,10 +56,13 @@ USER node
 FROM node:20-alpine AS production
 WORKDIR /app
 
-# Copy only the necessary files from the builder stage
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./package.json
+RUN mkdir -p src/generated && chown -R node:node src
+
+# Copy the bundled code from the build stage to the production image
+COPY --chown=node:node --from=builder /app/src/generated/i18n.generated.ts ./src/generated/i18n.generated.ts
+COPY --chown=node:node --from=builder /app/node_modules ./node_modules
+COPY --chown=node:node --from=builder /app/dist ./dist
+COPY --chown=node:node --from=builder /app/package.json ./
 
 USER node
 
