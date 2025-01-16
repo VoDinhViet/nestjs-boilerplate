@@ -1,13 +1,13 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
-import { sessions } from './session.schema';
+import { users } from './user.schema';
 
-export const users = pgTable('users', {
+export const sessions = pgTable('sessions', {
   id: uuid().primaryKey().defaultRandom(),
   email: varchar({ length: 255 }).notNull().unique(),
-  full_name: varchar({ length: 255 }).notNull(),
-  password: varchar({ length: 255 }).notNull(),
+  hash: varchar({ length: 255 }).notNull(),
   created_at: timestamp().notNull().defaultNow(),
+  author_id: uuid().notNull(),
   updated_at: timestamp()
     .notNull()
     .defaultNow()
@@ -15,8 +15,11 @@ export const users = pgTable('users', {
 });
 
 /*******************************************************************
- * Relations Users with Sessions - One to Many
+ * Relations Sessions with Users - Many to One
  *******************************************************************/
-export const usersRelations = relations(users, ({ many }) => ({
-  posts: many(sessions),
+export const sessionsRelations = relations(sessions, ({ one }) => ({
+  author: one(users, {
+    fields: [sessions.author_id],
+    references: [users.id],
+  }),
 }));
