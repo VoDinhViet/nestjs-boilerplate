@@ -11,7 +11,7 @@ RUN npm install -g pnpm
 # BUILD FOR LOCAL DEVELOPMENT
 #############################
 
-FROM base As development
+FROM base AS development
 WORKDIR /app
 RUN chown -R node:node /app
 
@@ -43,7 +43,6 @@ COPY --chown=node:node --from=development /app/nest-cli.json ./nest-cli.json
 RUN pnpm build
 
 # Removes unnecessary packages adn re-install only production dependencies
-ENV NODE_ENV production
 RUN pnpm prune --prod
 RUN pnpm install --prod
 
