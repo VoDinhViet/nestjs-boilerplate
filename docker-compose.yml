@@ -1,24 +1,22 @@
 services:
-  nestjs-boilerplate-api:
-    container_name: nestjs-boilerplate-api-local
-    restart: always
-
+  api:
+    container_name: nestjs-prod
     build:
       context: .
       dockerfile: Dockerfile
     env_file:
       - .env
-      - .env.production
+      - .env.${NODE_ENV} # .env.production or .env.development
     ports:
-      - "8000:8000"
+      - "8081:8000"
     networks:
       - nestjs-boilerplate-network
 
   postgres:
     image: postgres:17
-    container_name: postgres_db
+    container_name: postgres_db_prod
     ports:
-      - "5432:5432"
+      - "25432:5432"
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 123456
@@ -26,7 +24,6 @@ services:
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - nestjs-boilerplate-network
-
 
 networks:
   nestjs-boilerplate-network:
