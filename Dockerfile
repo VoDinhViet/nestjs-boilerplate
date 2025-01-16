@@ -43,8 +43,7 @@ COPY --chown=node:node --from=development /app/nest-cli.json ./nest-cli.json
 RUN pnpm build
 
 # Removes unnecessary packages adn re-install only production dependencies
-RUN pnpm prune --prod
-RUN pnpm install --prod
+RUN pnpm install --production
 
 USER node
 
