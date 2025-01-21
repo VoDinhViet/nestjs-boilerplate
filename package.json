@@ -37,7 +37,7 @@
     "@nestjs/platform-express": "^11.0.0",
     "@nestjs/swagger": "^11.0.0",
     "@nestjs/terminus": "^10.2.3",
-    "@types/ms": "^0.7.34",
+    "@types/ms": "^2.0.0",
     "argon2": "^0.41.1",
     "axios": "^1.7.9",
     "cacheable": "^1.8.7",
