@@ -2,7 +2,7 @@
 # BUILD BASE IMAGE
 ##################
 
-FROM node:22-alpine
+FROM node:20-alpine AS base
 
 # Install and use pnpm
 RUN npm install -g pnpm
@@ -11,7 +11,7 @@ RUN npm install -g pnpm
 # BUILD FOR LOCAL DEVELOPMENT
 #############################
 
-FROM base AS development
+FROM base As development
 WORKDIR /app
 RUN chown -R node:node /app
 
@@ -43,7 +43,9 @@ COPY --chown=node:node --from=development /app/nest-cli.json ./nest-cli.json
 RUN pnpm build
 
 # Removes unnecessary packages adn re-install only production dependencies
-RUN pnpm install
+ENV NODE_ENV production
+RUN pnpm prune --prod
+RUN pnpm install --prod
 
 USER node
 
@@ -51,7 +53,7 @@ USER node
 # BUILD FOR PRODUCTION
 ######################
 
-FROM node:22-alpine AS production
+FROM node:20-alpine AS production
 WORKDIR /app
 
 

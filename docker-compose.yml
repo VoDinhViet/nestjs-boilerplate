@@ -1,21 +1,15 @@
+version: '3.9'
 services:
   api:
     container_name: nestjs-prod
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        NODE_ENV: ${NODE_ENV}
     env_file:
       - .env
-      - .env.${NODE_ENV} # .env.production or .env.development
+      - .env.${NODE_ENV} # .env.production hoặc .env.development
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app # Ánh xạ mã nguồn vào container
-      - /app/node_modules # Giữ nguyên node_modules trong container
-    depends_on:
-        - postgres
     networks:
       - nestjs-boilerplate-network
 
