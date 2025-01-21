@@ -13,7 +13,7 @@ export const CACHE_INSTANCE = 'CACHE_INSTANCE';
     {
       provide: CACHE_INSTANCE,
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService<AllConfigType>) => {
+      useFactory: (configService: ConfigService<AllConfigType>) => {
         const secondary = new KeyvRedis(
           configService.get('redis.url', { infer: true }),
         );

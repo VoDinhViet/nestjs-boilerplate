@@ -12,7 +12,7 @@ export const DRIZZLE = Symbol('drizzle-connection');
     {
       provide: DRIZZLE,
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         const pool = new Pool({
           connectionString: configService.get<string>('DATABASE_URL'),
         });

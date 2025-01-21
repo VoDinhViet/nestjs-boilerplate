@@ -1,88 +1,72 @@
-import { Transform } from 'class-transformer';
+import { Transform, TransformFnParams } from 'class-transformer';
 
 /**
- * @description trim spaces from start and end, replace multiple spaces with one.
- *
- * @example
- * @ApiProperty()
- * @IsString()
- * @Trim()
- * name: string;
+ * @description Trim spaces from start and end, replace multiple spaces with one.
  *
  * @returns PropertyDecorator
- * @constructor
  */
 export function Trim(): PropertyDecorator {
-  return Transform((params) => {
-    const value = params.value as string[] | string;
-
-    if (Array.isArray(value)) {
-      return value.map((v) => v.trim().replaceAll(/\s\s+/g, ' '));
+  return Transform(({ value }: TransformFnParams) => {
+    if (typeof value === 'string') {
+      return value.trim().replace(/\s\s+/g, ' ');
     }
 
-    return value.trim().replaceAll(/\s\s+/g, ' ');
+    if (Array.isArray(value) && value.every((v) => typeof v === 'string')) {
+      return value.map((v) => v.trim().replace(/\s\s+/g, ' '));
+    }
+
+    return value; // Safely return non-string values as is
   });
 }
 
+/**
+ * @description Converts string values 'true'/'false' to boolean true/false.
+ * Leaves other values unchanged.
+ *
+ * @returns PropertyDecorator
+ */
 export function ToBoolean(): PropertyDecorator {
-  return Transform(
-    (params) => {
-      switch (params.value) {
-        case 'true': {
-          return true;
-        }
-
-        case 'false': {
-          return false;
-        }
-
-        default: {
-          return params.value;
-        }
-      }
-    },
-    { toClassOnly: true },
-  );
+  return Transform(({ value }: TransformFnParams) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value; // Safely return non-string values as is
+  });
 }
 
+/**
+ * @description Converts string or array of strings to lowercase.
+ *
+ * @returns PropertyDecorator
+ */
 export function ToLowerCase(): PropertyDecorator {
-  return Transform(
-    (params) => {
-      const value = params.value;
+  return Transform(({ value }: TransformFnParams) => {
+    if (typeof value === 'string') {
+      return value.toLowerCase();
+    }
 
-      if (!value) {
-        return;
-      }
-
-      if (!Array.isArray(value)) {
-        return value.toLowerCase();
-      }
-
+    if (Array.isArray(value) && value.every((v) => typeof v === 'string')) {
       return value.map((v) => v.toLowerCase());
-    },
-    {
-      toClassOnly: true,
-    },
-  );
+    }
+
+    return value; // Safely return non-string values as is
+  });
 }
 
+/**
+ * @description Converts string or array of strings to uppercase.
+ *
+ * @returns PropertyDecorator
+ */
 export function ToUpperCase(): PropertyDecorator {
-  return Transform(
-    (params) => {
-      const value = params.value;
+  return Transform(({ value }: TransformFnParams) => {
+    if (typeof value === 'string') {
+      return value.toUpperCase();
+    }
 
-      if (!value) {
-        return;
-      }
-
-      if (!Array.isArray(value)) {
-        return value.toUpperCase();
-      }
-
+    if (Array.isArray(value) && value.every((v) => typeof v === 'string')) {
       return value.map((v) => v.toUpperCase());
-    },
-    {
-      toClassOnly: true,
-    },
-  );
+    }
+
+    return value; // Safely return non-string values as is
+  });
 }
