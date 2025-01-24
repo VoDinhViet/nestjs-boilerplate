@@ -12,12 +12,13 @@ services:
       - dokploy-network
     labels:
       - traefik.enable=true
-      - traefik.http.routers.backend-app.rule=Host(`test.api.mayship.thomi.com.vn`)
-      - traefik.http.routers.backend-app.entrypoints=web
-      - traefik.http.services.backend-app.loadbalancer.server.port=8000
+      - traefik.http.routers.api.rule=Host(`next-app.dokploy.com`)
+      - traefik.http.routers.api.entrypoints=websecure
+      - traefik.http.routers.api.tls.certResolver=letsencrypt
+      - traefik.http.services.api.loadbalancer.server.port=8000
   postgres:
     image: postgres:17
-    container_name: postgres_db_prod
+    container_name: postgres
     ports:
       - "25432:5432"
     environment:
