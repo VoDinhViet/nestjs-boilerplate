@@ -12,9 +12,9 @@ services:
       - dokploy-network
     labels:
       - traefik.enable=true
-      - traefik.http.routers.backend-app.rule=Host(`nest-boilerplate-be-nzo9a5-4c362c-45-77-246-99.traefik.me`)
+      - traefik.http.routers.backend-app.rule=Host(`test.api.mayship.thomi.com.vn`)
       - traefik.http.routers.backend-app.entrypoints=web
-      - traefik.http.services.backend-app.loadbalancer.server.port=5000
+      - traefik.http.services.backend-app.loadbalancer.server.port=8000
   postgres:
     image: postgres:17
     container_name: postgres_db_prod
