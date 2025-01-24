@@ -1,6 +1,6 @@
 services:
   api:
-    container_name: nestjs-prod
+    container_name: api
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,8 +9,12 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - nestjs-boilerplate-network
-
+      - dokploy-network
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend-app.rule=Host(`nest-boilerplate-be-nzo9a5-4c362c-45-77-246-99.traefik.me`)
+      - traefik.http.routers.backend-app.entrypoints=web
+      - traefik.http.services.backend-app.loadbalancer.server.port=5000
   postgres:
     image: postgres:17
     container_name: postgres_db_prod
@@ -22,8 +26,8 @@ services:
     volumes:
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - nestjs-boilerplate-network
+      - dokploy-network
 
 networks:
-  nestjs-boilerplate-network:
-    driver: bridge
+  dokploy-network:
+    external: true
