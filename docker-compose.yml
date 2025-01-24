@@ -1,5 +1,4 @@
-version: '3.8'
-
+version: '3.9'
 services:
   api:
     container_name: nestjs-prod
@@ -8,12 +7,11 @@ services:
       dockerfile: Dockerfile
     env_file:
       - .env
+      - .env.${NODE_ENV} # .env.production hoặc .env.development
     ports:
       - "8000:8000"
     networks:
       - nestjs-boilerplate-network
-    depends_on:
-      - postgres
 
   postgres:
     image: postgres:17
@@ -23,33 +21,11 @@ services:
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: nestjs_db
     volumes:
-      - postgres_data:/var/lib/postgresql/data
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - nestjs-boilerplate-network
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "root"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  nginx:
-    image: nginx:1.21
-    container_name: nginx-prod
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-    networks:
-      - nestjs-boilerplate-network
-    depends_on:
-      - api
 
 networks:
   nestjs-boilerplate-network:
     driver: bridge
-
-volumes:
-  postgres_data:
